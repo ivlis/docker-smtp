@@ -14,8 +14,13 @@ DC_RELAY_NETS="10.0.0.0/8;172.16.0.0/12;192.168.0.0/16"
 if [ "x$RELAY_HOST" != "x" ]; then
     DC_EXIMCONFIG_CONFIGTYPE="satellite"
     DC_SMARTHOST="$RELAY_HOST::${RELAY_PORT:-25}"
-    if [ "x$RELAY_USERNAME" != "x" ] && [ "x$RELAY_PASSWORD" != "x" ]; then
-        printf '%s\n' "*:$RELAY_USERNAME:$RELAY_PASSWORD" > "$CONFDIR/passwd.client"
+    if [ "x$RELAY_USERNAME" != "x" ]; then
+        if [ "x$RELAY_PASSWORD_FILE" != "x" ]; then
+            RELAY_PASSWORD=$(cat $RELAY_PASSWORD_FILE)
+        fi
+        if [ "x$RELAY_PASSWORD" != "x" ]; then
+            printf '%s\n' "*:$RELAY_USERNAME:$RELAY_PASSWORD" > "$CONFDIR/passwd.client"
+        fi
     fi
 fi
 
